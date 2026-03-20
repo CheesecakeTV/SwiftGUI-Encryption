@@ -107,8 +107,10 @@ class PasswordJSONDictFile(EncryptedJSONDictFile):
             **kwargs
         )
 
-    def _regenerate_key(self):
-        self._salt = random_key(SALT_LEN)
+    def _regenerate_key(self, new_salt = True):
+        if new_salt:
+            self._salt = random_key(SALT_LEN)
+
         self._filekey = adv.argon2_key_derivation(self._password.encode(), self._salt)
 
     def change_key(self, new_key: bytes):
@@ -150,6 +152,11 @@ class PasswordJSONDictFile(EncryptedJSONDictFile):
             path: Path
     ) -> dict:
         raw = path.read_bytes()
+
+        salt = raw[:SALT_LEN]
+        if salt != self._salt:
+            self._salt = salt
+            self._regenerate_key(new_salt=False)
 
         raw = decrypt_full(raw[SALT_LEN:], self._filekey).decode()
         return json.loads(raw)

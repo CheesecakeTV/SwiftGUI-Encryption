@@ -1,6 +1,6 @@
 [project]
 name = "SwiftGUI_Encryption"
-version = "0.0.3"
+version = "0.0.4"
 packages = [
     { include = "SwiftGUI_Encryption", from = "src" }
 ]
