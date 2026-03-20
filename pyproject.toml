@@ -1,0 +1,27 @@
+[project]
+name = "SwiftGUI_Encryption"
+version = "0.0.1"
+packages = [
+    { include = "SwiftGUI_Encryption", from = "src" }
+]
+authors = [
+  { name="Eric aka CheesecakeTV", email="cheesecaketv53+pypi@gmail.com" },
+]
+description = "Useful encryption-features for SwiftGUI-applications based on PyCryptoDome"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "Apache-2.0"
+license-files = ["LICEN[CS]E*"]
+dependencies = []
+[project.urls]
+Repository = "https://github.com/CheesecakeTV/SwiftGUI-Encryption"
+Documentation = "https://github.com/CheesecakeTV/SwiftGUI-Docs"
+issues = "https://github.com/CheesecakeTV/SwiftGUI/issues"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
