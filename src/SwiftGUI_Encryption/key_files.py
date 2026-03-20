@@ -23,7 +23,7 @@ class BaseKeyFile:
         :param saved_key:   The key that is to be stored inside the file. Leave empty for random key
         """
         # Create folders containing this file
-        assert file_key or file_password, "You need to specify either a file_password, or a file_key for each KeyFile!"
+        assert file_key or file_password, "You need to specify either a file_password, or a file_key for every KeyFile!"
 
         self._salt: bytes = adv.random_key(SALT_LEN) # Placeholder if a key is used instead of a password
         self._key: bytes | None = saved_key  # Key stored in the file

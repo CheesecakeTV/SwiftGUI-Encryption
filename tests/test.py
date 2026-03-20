@@ -1,10 +1,12 @@
 import SwiftGUI_Encryption as sge
 
-pw = "Hallo Welt!"
+my_key = "Hallo Welt"
 
-enc = sge.encrypt_with_password(b"SECRET :D", pw)
-print(enc)
-dec = sge.decrypt_with_password(enc, pw)
-print(dec)
+my_file = sge.sg.PasswordJSONDictFile("filetest/hallo.secret", my_key)
+
+#my_file["Hallo"] = "Welt"
+
+print(my_file)
+print(my_file.key)
 
 
