@@ -1,8 +1,3 @@
-import argon2pure
-from Crypto.Cipher import AES
-import os
-import hashlib
-
 from SwiftGUI_Encryption import Advanced as adv
 
 # This should not be chanced, it just doesn't feel right to add magic numbers...
@@ -33,6 +28,62 @@ def decrypt_full(data: bytes, key: bytes) -> bytes:
     data = data[NONCE_LEN:]
 
     return adv.decrypt(data, key, nonce)
+
+def encrypt_multilayer(data: bytes, *keys: bytes) -> bytes:
+    """
+    Encrypt some data multiple times.
+    Pass a key for every layer of encryption.
+
+    This is overkill for most applications.
+    A single AES-256-GCM-encryption is already very secure, even against quantumcomputers.
+
+    VERY IMPORTANT:
+    To attack even a 3-layer-encryption is basically impossible.
+    So the attack will be on the keys, not the encryption.
+    Make sure the keys are secure, they are the weakest link.
+
+    Also, don't correlate the keys in any way.
+    If you can calculate key2 from key1, it defies the whole reason for this multilayer-encryption.
+
+    KINDA IMPORTANT:
+    Using two keys is only a little better than one key, because someone could do a "meet-in-the-middle-attack".
+    As a general rule, you should use an odd number of keys.
+
+    TECHNICALITIES:
+    Only the innermost encryption is using AES-GCM Mode. All other layers are AES-CTR.
+    That's because full AES-GCM allows guessing, if the decryption was successful.
+    Especially for short data, you could brute-force through layer by layer, leaving only a few possible keys per layer.
+
+    So, this function disables that verification-step for the outer layers.
+    You can only check if the full decryption was a success, but not separate layers.
+
+    :return:
+    """
+    # GCM encryption
+    data = encrypt_full(data, keys[0])
+
+    # CTR encryptions
+    for key in keys[1:]:
+        nonce = adv.random_key(12)
+        data = nonce + adv.encrypt_CTR(data, key, nonce)
+
+    return data
+
+def decrypt_multilayer(data: bytes, *keys: bytes) -> bytes:
+    """
+    Read the description of encrypt_multilayer.
+
+    The keys have to be in the same order as with the encryption.
+
+    :return:
+    """
+    # CTR encryptions
+    for key in keys[1:][::-1]:
+        nonce = data[:12]
+        data = adv.decrypt_CTR(data[12:], key, nonce)
+
+    # GCM encryption
+    return decrypt_full(data, keys[0])
 
 def encrypt_with_password(data: bytes, password: str, security_multiplier: int = 1) -> bytes:
     """

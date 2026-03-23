@@ -45,6 +45,35 @@ def argon2_key_derivation(derive_from: bytes, salt: bytes, multiplier: int = 1, 
 
     return argon2pure.argon2(derive_from, salt, multiplier, 8 * multiplier, parallelism=1, tag_length=n)
 
+def encrypt_CTR(data: bytes, key: bytes, nonce: bytes) -> bytes:
+    """
+    Encrypt some data in AES-256-CTR mode.
+
+    :param data:
+    :param key:
+    :param nonce: A 12-byte random number, which you should definetly remember
+    :return: Encrypted
+    """
+    crypter = AES.new(key, AES.MODE_CTR, nonce=nonce)
+    enc_data = crypter.encrypt(data)
+
+    return enc_data
+
+def decrypt_CTR(enc_data:bytes, key:bytes, nonce:bytes) -> bytes:
+    """
+    Decrypt some data in AES-256-CTR mode.
+    The decrypted data is not verified, since this isn't a feature of AES-CTR
+
+    :param enc_data: Encrypted data
+    :param key: This needs to be the same as with the encryption
+    :param nonce: This needs to be the same as with the encryption
+    :return:
+    """
+    crypter = AES.new(key, AES.MODE_CTR, nonce=nonce)
+    data = crypter.decrypt(enc_data)
+
+    return data
+
 def encrypt(data: bytes, key: bytes, nonce: bytes, mac_len: int = 8) -> bytes:
     """
     Encrypt some data.

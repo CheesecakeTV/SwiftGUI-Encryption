@@ -1,8 +1,19 @@
 import SwiftGUI_Encryption as sge
 
-my_file = sge.sg.PasswordJSONDictFile("secrets/ConfidentialInformation1", "Password")
-my_file.set_path("secrets/ConfidentialInformation", reload=True)
+keys = [
+    sge.random_key(),
+    sge.random_key(),
+    sge.random_key(),
+    sge.random_key(),
+    sge.random_key(),
+    sge.random_key(),
+    sge.random_key(),
+]
 
-#my_file["Hello"] = "Secret world"
-print(my_file)
+data = b"Hallo Welt"
+
+encr = sge.encrypt_multilayer(data, *keys)
+print(encr, len(encr))
+decr = sge.decrypt_multilayer(encr, *keys)
+print(decr)
 
