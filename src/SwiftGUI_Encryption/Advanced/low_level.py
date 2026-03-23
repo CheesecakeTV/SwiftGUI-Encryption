@@ -94,7 +94,7 @@ def encrypt(data: bytes, key: bytes, nonce: bytes, mac_len: int = 8) -> bytes:
 def decrypt(enc_data:bytes, key:bytes, nonce:bytes, mac_len: int = 8) -> bytes:
     """
     Decrypt some data.
-    The tag needs to be appended to the data.
+    The tag needs to be appended to the front of the data.
 
     Raises a value-error if the data was manipulated (tag is invalid)
 
@@ -113,4 +113,3 @@ def decrypt(enc_data:bytes, key:bytes, nonce:bytes, mac_len: int = 8) -> bytes:
     crypter.verify(tag)
 
     return data
-

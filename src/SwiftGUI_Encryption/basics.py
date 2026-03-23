@@ -38,16 +38,13 @@ def encrypt_multilayer(data: bytes, *keys: bytes) -> bytes:
     A single AES-256-GCM-encryption is already very secure, even against quantumcomputers.
 
     VERY IMPORTANT:
-    To attack even a 3-layer-encryption is basically impossible.
-    So the attack will be on the keys, not the encryption.
-    Make sure the keys are secure, they are the weakest link.
-
-    Also, don't correlate the keys in any way.
-    If you can calculate key2 from key1, it defies the whole reason for this multilayer-encryption.
+    Don't correlate the keys in any way.
+    If you calculate key2 from key1, you can just leave out key2.
+    DON'T DO SECURITY-BY-OBSCURITY!
 
     KINDA IMPORTANT:
-    Using two keys is only a little better than one key, because someone could do a "meet-in-the-middle-attack".
-    As a general rule, you should use an odd number of keys.
+    Using two keys is only a little more secure than one key, because someone could do a "meet-in-the-middle-attack".
+    As a general rule, you should only use an odd number of keys.
 
     TECHNICALITIES:
     Only the innermost encryption is using AES-GCM Mode. All other layers are AES-CTR.
@@ -60,14 +57,16 @@ def encrypt_multilayer(data: bytes, *keys: bytes) -> bytes:
     :return:
     """
     # GCM encryption
-    data = encrypt_full(data, keys[0])
+    first_nonce = adv.random_key(NONCE_LEN)
+    nonce = first_nonce
+    data = adv.encrypt(data, keys[0], nonce)
 
     # CTR encryptions
     for key in keys[1:]:
-        nonce = adv.random_key(12)
-        data = nonce + adv.encrypt_CTR(data, key, nonce)
+        nonce = adv.make_hash(nonce)[:12]
+        data = adv.encrypt_CTR(data, key, nonce)
 
-    return data
+    return first_nonce + data
 
 def decrypt_multilayer(data: bytes, *keys: bytes) -> bytes:
     """
@@ -77,13 +76,22 @@ def decrypt_multilayer(data: bytes, *keys: bytes) -> bytes:
 
     :return:
     """
+    first_nonce = data[:NONCE_LEN]
+    data = data[NONCE_LEN:]
+
+    nonce = first_nonce
+    nonces = list()
+
+    for i in range(len(keys) - 1):
+        nonce = adv.make_hash(nonce)[:12]
+        nonces.append(nonce)
+
     # CTR encryptions
-    for key in keys[1:][::-1]:
-        nonce = data[:12]
-        data = adv.decrypt_CTR(data[12:], key, nonce)
+    for nonce, key in zip(nonces[::-1], keys[1:][::-1]):
+        data = adv.decrypt_CTR(data, key, nonce)
 
     # GCM encryption
-    return decrypt_full(data, keys[0])
+    return adv.decrypt(data, keys[0], first_nonce)
 
 def encrypt_with_password(data: bytes, password: str, security_multiplier: int = 1) -> bytes:
     """
