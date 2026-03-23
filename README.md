@@ -13,3 +13,14 @@ I let you use my encryption-schemes, so you won't have to dive deep into cryptog
 
 Also, this package can be used as an addon for SwiftGUI, but doesn't have to be.
 
+# Installation
+Open your terminal and execute this:
+```bash
+pip install SwiftGUI_Encryption
+```
+
+# Dependancies
+This package wouldn't be possible without the following open-source packages:
+- `PyCryptoDome`: A Python-package featuring a lot of cryptography algorithms 
+- `argon2pure`: A small package implementing the argon2-key-derivation algorithm
+

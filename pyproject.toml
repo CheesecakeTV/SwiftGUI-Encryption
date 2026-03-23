@@ -1,11 +1,11 @@
 [project]
 name = "SwiftGUI_Encryption"
-version = "0.0.1"
+version = "0.0.6"
 packages = [
     { include = "SwiftGUI_Encryption", from = "src" }
 ]
 authors = [
-  { name="Eric aka CheesecakeTV", email="cheesecaketv53+pypi@gmail.com" },
+  { name="Eric aka CheesecakeTV", email="eric@swiftgui.de" },
 ]
 description = "Useful encryption-features for SwiftGUI-applications based on PyCryptoDome"
 readme = "README.md"
@@ -16,7 +16,10 @@ classifiers = [
 ]
 license = "Apache-2.0"
 license-files = ["LICEN[CS]E*"]
-dependencies = []
+dependencies = [
+    "PyCryptoDome",
+    "argon2pure",
+]
 [project.urls]
 Repository = "https://github.com/CheesecakeTV/SwiftGUI-Encryption"
 Documentation = "https://github.com/CheesecakeTV/SwiftGUI-Docs"
