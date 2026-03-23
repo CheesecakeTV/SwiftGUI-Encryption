@@ -19,7 +19,15 @@ Open your terminal and execute this:
 pip install SwiftGUI_Encryption
 ```
 
-# Dependancies
+# Getting started
+Find the tutorial in this repository:\
+https://github.com/CheesecakeTV/SwiftGUI-Encryption/tree/main/docs/tutorial
+
+There already is a tutorial about the most important features.
+
+I also wrote a short introduction to cryptography, so you actually know what you are doing when using this package.
+
+# Dependencies
 This package wouldn't be possible without the following open-source packages:
 - `PyCryptoDome`: A Python-package featuring a lot of cryptography algorithms 
 - `argon2pure`: A small package implementing the argon2-key-derivation algorithm
