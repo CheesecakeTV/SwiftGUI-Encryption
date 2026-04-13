@@ -131,6 +131,7 @@ class PasswordJSONDictFile(EncryptedJSONDictFile):
         """
         self._password = new_password
         self._regenerate_key()
+        self._do_auto_save()
 
     def _save_to_file(
             self,
