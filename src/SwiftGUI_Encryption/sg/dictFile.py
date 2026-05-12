@@ -23,6 +23,18 @@ class EncryptedJSONDictFile(files.BaseDictFile):
             auto_save: bool = None,
             **kwargs
     ):
+        """
+        A JSON-DictFile that is encrypted.
+
+        Parameters not described here are explained in the docstring of the parent-class SwiftGUI.Files.JsonDictFile
+
+        :param path: Path to the file. Subdirectories are created automatically
+        :param file_key: Key to unlock the file
+        :param defaults:
+        :param add_defaults_to_values:
+        :param auto_save:
+        :param kwargs:
+        """
         assert not isinstance(file_key, str), "Keys are always in the byte-format.\nIf you tired to pass a password, use PasswordJSONDictFile instead."
 
         self._filekey = file_key    # Key to encrypt the file with
@@ -37,6 +49,9 @@ class EncryptedJSONDictFile(files.BaseDictFile):
 
     def change_key(self, new_key: bytes):
         """
+        Update the key used to unlock the file.
+
+        Make sure to save if you don't have auto-save enabled.
 
         :param new_key:
         :return:
@@ -48,6 +63,10 @@ class EncryptedJSONDictFile(files.BaseDictFile):
 
     @property
     def key(self) -> bytes:
+        """
+        The actual encryption-key for this file
+        :return:
+        """
         return self._filekey
 
     def _save_to_file(
@@ -124,7 +143,9 @@ class PasswordJSONDictFile(EncryptedJSONDictFile):
 
     def change_password(self, new_password: str):
         """
-        Specify a new password for this file
+        Specify a new password for this file.
+
+        Make sure to save if you don't have auto-save enabled.
 
         :param new_password:
         :return:
